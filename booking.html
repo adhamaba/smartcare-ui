@@ -4,30 +4,66 @@
 <head>
 <title>Book Appointment</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+.layout{
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:40px;
+}
+
+.left-panel{
+text-align:left;
+}
+
+.right-panel{
+border:1px solid #ccc;
+padding:20px;
+width:300px;
+background:white;
+border-radius:10px;
+}
+
+.summary{
+margin-top:20px;
+}
+
+.summary p{
+margin:5px 0;
+}
+</style>
+
 </head>
 
 <body>
 
 <h2>Book Appointment</h2>
 
-<div class="booking-container">
+<div class="layout">
 
-<label>Provider</label>
-<select>
+<div class="left-panel">
+
+<label>Provider</label><br>
+<select id="provider">
 <option>Dr Smith</option>
 <option>Dr Lee</option>
 <option>Dr Patel</option>
 </select>
 
-<label>Service</label>
-<select>
+<br><br>
+
+<label>Service</label><br>
+<select id="service">
 <option>General Checkup</option>
 <option>Dental</option>
 <option>Consultation</option>
 </select>
 
-<label>Date</label>
-<input type="date">
+<br><br>
+
+<label>Date</label><br>
+<input type="date" id="date">
 
 <h3>Available Time Slots</h3>
 
@@ -42,23 +78,79 @@
 <tr>
 <td>10:00</td>
 <td>Dr Smith</td>
-<td><button>Select</button></td>
+<td><button onclick="selectTime('10:00')">Select</button></td>
 </tr>
 
 <tr>
 <td>11:00</td>
 <td>Dr Lee</td>
-<td><button>Select</button></td>
+<td><button onclick="selectTime('11:00')">Select</button></td>
+</tr>
+
+<tr>
+<td>12:00</td>
+<td>Dr Patel</td>
+<td><button onclick="selectTime('12:00')">Select</button></td>
 </tr>
 
 </table>
 
-<br>
+</div>
 
-<button>Confirm Appointment</button>
-<button>Cancel</button>
+<div class="right-panel">
+
+<h3>Appointment Summary</h3>
+
+<div class="summary">
+
+<p>Provider: <span id="selectedProvider">None</span></p>
+
+<p>Service: <span id="selectedService">None</span></p>
+
+<p>Date: <span id="selectedDate">None</span></p>
+
+<p>Time: <span id="selectedTime">None</span></p>
 
 </div>
+
+<br>
+
+<button onclick="confirmAppointment()">Confirm Appointment</button>
+<button onclick="clearAppointment()">Cancel</button>
+
+</div>
+
+</div>
+
+<script>
+
+function selectTime(time){
+
+const provider = document.getElementById("provider").value
+const service = document.getElementById("service").value
+const date = document.getElementById("date").value
+
+document.getElementById("selectedProvider").innerText = provider
+document.getElementById("selectedService").innerText = service
+document.getElementById("selectedDate").innerText = date
+document.getElementById("selectedTime").innerText = time
+
+}
+
+function confirmAppointment(){
+alert("Appointment Confirmed!")
+}
+
+function clearAppointment(){
+
+document.getElementById("selectedProvider").innerText = "None"
+document.getElementById("selectedService").innerText = "None"
+document.getElementById("selectedDate").innerText = "None"
+document.getElementById("selectedTime").innerText = "None"
+
+}
+
+</script>
 
 </body>
 </html>
