@@ -1,34 +1,42 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>SmartCare Login</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartCare Login</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<div class="login-container">
+  <div class="login-container">
+    <h2>SmartCare Login</h2>
 
-<h2>SmartCare Login</h2>
+    <input type="text" id="username" placeholder="Email/Username" />
+    <input type="password" id="password" placeholder="Password" />
 
-<input type="text" placeholder="Email/Username">
+    <button onclick="login()">Login</button>
 
-<input type="password" placeholder="Password">
+    <p id="loginMessage" class="message error"></p>
 
-<button onclick="login()">Login</button>
+    <br />
+    <a href="#">Forgot password?</a>
+  </div>
 
-<br><br>
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const loginMessage = document.getElementById("loginMessage");
 
-<a href="#">Forgot password</a>
+      if (!username || !password) {
+        loginMessage.textContent = "Please enter both username/email and password.";
+        return;
+      }
 
-</div>
-
-<script>
-function login(){
-window.location.href="booking.html"
-}
-</script>
+      loginMessage.textContent = "";
+      window.location.href = "booking.html";
+    }
+  </script>
 
 </body>
 </html>

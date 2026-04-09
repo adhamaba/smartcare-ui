@@ -1,156 +1,167 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Book Appointment</title>
-<link rel="stylesheet" href="style.css">
-
-<style>
-.layout{
-display:flex;
-justify-content:center;
-gap:40px;
-margin-top:40px;
-}
-
-.left-panel{
-text-align:left;
-}
-
-.right-panel{
-border:1px solid #ccc;
-padding:20px;
-width:300px;
-background:white;
-border-radius:10px;
-}
-
-.summary{
-margin-top:20px;
-}
-
-.summary p{
-margin:5px 0;
-}
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Appointment</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<h2>Book Appointment</h2>
+  <h2>Book Appointment</h2>
 
-<div class="layout">
+  <div class="layout">
+    <div class="left-panel card">
+      <label for="provider">Provider</label><br />
+      <select id="provider">
+        <option value="">Select Provider</option>
+        <option>Dr Smith</option>
+        <option>Dr Lee</option>
+        <option>Dr Patel</option>
+      </select>
 
-<div class="left-panel">
+      <br /><br />
 
-<label>Provider</label><br>
-<select id="provider">
-<option>Dr Smith</option>
-<option>Dr Lee</option>
-<option>Dr Patel</option>
-</select>
+      <label for="service">Service</label><br />
+      <select id="service">
+        <option value="">Select Service</option>
+        <option>General Checkup</option>
+        <option>Dental</option>
+        <option>Consultation</option>
+      </select>
 
-<br><br>
+      <br /><br />
 
-<label>Service</label><br>
-<select id="service">
-<option>General Checkup</option>
-<option>Dental</option>
-<option>Consultation</option>
-</select>
+      <label for="date">Date</label><br />
+      <input type="date" id="date" />
 
-<br><br>
+      <h3>Available Time Slots</h3>
 
-<label>Date</label><br>
-<input type="date" id="date">
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>Provider</th>
+          <th>Status</th>
+        </tr>
 
-<h3>Available Time Slots</h3>
+        <tr>
+          <td>10:00</td>
+          <td>Dr Smith</td>
+          <td><button class="slot-btn unavailable" onclick="selectUnavailable()">Unavailable</button></td>
+        </tr>
 
-<table>
+        <tr>
+          <td>11:00</td>
+          <td>Dr Lee</td>
+          <td><button class="slot-btn" onclick="selectTime('11:00', 'Dr Lee')">Select</button></td>
+        </tr>
 
-<tr>
-<th>Time</th>
-<th>Provider</th>
-<th>Select</th>
-</tr>
+        <tr>
+          <td>12:00</td>
+          <td>Dr Patel</td>
+          <td><button class="slot-btn" onclick="selectTime('12:00', 'Dr Patel')">Select</button></td>
+        </tr>
+      </table>
+    </div>
 
-<tr>
-<td>10:00</td>
-<td>Dr Smith</td>
-<td><button onclick="selectTime('10:00')">Select</button></td>
-</tr>
+    <div class="right-panel card">
+      <h3>Appointment Summary</h3>
 
-<tr>
-<td>11:00</td>
-<td>Dr Lee</td>
-<td><button onclick="selectTime('11:00')">Select</button></td>
-</tr>
+      <div class="summary">
+        <p>Provider: <span id="selectedProvider">None</span></p>
+        <p>Service: <span id="selectedService">None</span></p>
+        <p>Date: <span id="selectedDate">None</span></p>
+        <p>Time: <span id="selectedTime">None</span></p>
+      </div>
 
-<tr>
-<td>12:00</td>
-<td>Dr Patel</td>
-<td><button onclick="selectTime('12:00')">Select</button></td>
-</tr>
+      <p id="bookingMessage" class="message"></p>
 
-</table>
+      <div class="button-group">
+        <button onclick="confirmAppointment()">Confirm Appointment</button>
+        <button class="secondary-btn" onclick="clearAppointment()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-</div>
+  <script>
+    let selectedTimeValue = "";
+    let selectedProviderValue = "";
 
-<div class="right-panel">
+    function selectTime(time, slotProvider) {
+      const service = document.getElementById("service").value;
+      const date = document.getElementById("date").value;
+      const message = document.getElementById("bookingMessage");
 
-<h3>Appointment Summary</h3>
+      if (!date) {
+        message.textContent = "Please select a date before choosing a time slot.";
+        message.className = "message error";
+        return;
+      }
 
-<div class="summary">
+      if (!service) {
+        message.textContent = "Please select a service before choosing a time slot.";
+        message.className = "message error";
+        return;
+      }
 
-<p>Provider: <span id="selectedProvider">None</span></p>
+      selectedTimeValue = time;
+      selectedProviderValue = slotProvider;
 
-<p>Service: <span id="selectedService">None</span></p>
+      document.getElementById("provider").value = slotProvider;
+      document.getElementById("selectedProvider").innerText = slotProvider;
+      document.getElementById("selectedService").innerText = service;
+      document.getElementById("selectedDate").innerText = date;
+      document.getElementById("selectedTime").innerText = time;
 
-<p>Date: <span id="selectedDate">None</span></p>
+      message.textContent = "Time slot selected successfully.";
+      message.className = "message success";
+    }
 
-<p>Time: <span id="selectedTime">None</span></p>
+    function selectUnavailable() {
+      const message = document.getElementById("bookingMessage");
+      message.textContent = "This time slot is unavailable. Please choose another slot.";
+      message.className = "message error";
+    }
 
-</div>
+    function confirmAppointment() {
+      const provider = document.getElementById("provider").value;
+      const service = document.getElementById("service").value;
+      const date = document.getElementById("date").value;
+      const message = document.getElementById("bookingMessage");
 
-<br>
+      if (!provider || !service || !date || !selectedTimeValue) {
+        message.textContent = "Please complete all required appointment details before confirming.";
+        message.className = "message error";
+        return;
+      }
 
-<button onclick="confirmAppointment()">Confirm Appointment</button>
-<button onclick="clearAppointment()">Cancel</button>
+      document.getElementById("selectedProvider").innerText = provider;
+      document.getElementById("selectedService").innerText = service;
+      document.getElementById("selectedDate").innerText = date;
+      document.getElementById("selectedTime").innerText = selectedTimeValue;
 
-</div>
+      message.textContent = "Appointment confirmed successfully!";
+      message.className = "message success";
+    }
 
-</div>
+    function clearAppointment() {
+      document.getElementById("provider").value = "";
+      document.getElementById("service").value = "";
+      document.getElementById("date").value = "";
 
-<script>
+      document.getElementById("selectedProvider").innerText = "None";
+      document.getElementById("selectedService").innerText = "None";
+      document.getElementById("selectedDate").innerText = "None";
+      document.getElementById("selectedTime").innerText = "None";
 
-function selectTime(time){
+      selectedTimeValue = "";
+      selectedProviderValue = "";
 
-const provider = document.getElementById("provider").value
-const service = document.getElementById("service").value
-const date = document.getElementById("date").value
-
-document.getElementById("selectedProvider").innerText = provider
-document.getElementById("selectedService").innerText = service
-document.getElementById("selectedDate").innerText = date
-document.getElementById("selectedTime").innerText = time
-
-}
-
-function confirmAppointment(){
-alert("Appointment Confirmed!")
-}
-
-function clearAppointment(){
-
-document.getElementById("selectedProvider").innerText = "None"
-document.getElementById("selectedService").innerText = "None"
-document.getElementById("selectedDate").innerText = "None"
-document.getElementById("selectedTime").innerText = "None"
-
-}
-
-</script>
+      const message = document.getElementById("bookingMessage");
+      message.textContent = "Appointment selection cleared.";
+      message.className = "message";
+    }
+  </script>
 
 </body>
 </html>
