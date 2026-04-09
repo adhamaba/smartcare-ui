@@ -7,8 +7,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <h2>Book Appointment</h2>
+  <div class="page-header">
+    <h2>Book Appointment</h2>
+    <div class="top-actions">
+      <button onclick="goToAppointments()">View Appointments</button>
+      <button class="secondary-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
   <div class="layout">
     <div class="left-panel card">
@@ -50,16 +55,16 @@
           <td><button class="slot-btn unavailable" onclick="selectUnavailable()">Unavailable</button></td>
         </tr>
 
-        <tr>
+        <tr id="row-11">
           <td>11:00</td>
           <td>Dr Lee</td>
-          <td><button class="slot-btn" onclick="selectTime('11:00', 'Dr Lee')">Select</button></td>
+          <td><button class="slot-btn" onclick="selectTime('11:00', 'Dr Lee', 'row-11')">Select</button></td>
         </tr>
 
-        <tr>
+        <tr id="row-12">
           <td>12:00</td>
           <td>Dr Patel</td>
-          <td><button class="slot-btn" onclick="selectTime('12:00', 'Dr Patel')">Select</button></td>
+          <td><button class="slot-btn" onclick="selectTime('12:00', 'Dr Patel', 'row-12')">Select</button></td>
         </tr>
       </table>
     </div>
@@ -78,7 +83,7 @@
 
       <div class="button-group">
         <button onclick="confirmAppointment()">Confirm Appointment</button>
-        <button class="secondary-btn" onclick="clearAppointment()">Cancel</button>
+        <button class="secondary-btn" onclick="clearAppointment()">Clear Selection</button>
       </div>
     </div>
   </div>
@@ -86,8 +91,14 @@
   <script>
     let selectedTimeValue = "";
     let selectedProviderValue = "";
+    let selectedRowId = "";
 
-    function selectTime(time, slotProvider) {
+    function removeRowHighlights() {
+      const rows = document.querySelectorAll("table tr");
+      rows.forEach(row => row.classList.remove("selected-row"));
+    }
+
+    function selectTime(time, slotProvider, rowId) {
       const service = document.getElementById("service").value;
       const date = document.getElementById("date").value;
       const message = document.getElementById("bookingMessage");
@@ -106,6 +117,10 @@
 
       selectedTimeValue = time;
       selectedProviderValue = slotProvider;
+      selectedRowId = rowId;
+
+      removeRowHighlights();
+      document.getElementById(rowId).classList.add("selected-row");
 
       document.getElementById("provider").value = slotProvider;
       document.getElementById("selectedProvider").innerText = slotProvider;
@@ -135,12 +150,26 @@
         return;
       }
 
+      const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+      const newAppointment = {
+        id: Date.now(),
+        provider: provider,
+        service: service,
+        date: date,
+        time: selectedTimeValue,
+        status: "Confirmed"
+      };
+
+      appointments.push(newAppointment);
+      localStorage.setItem("appointments", JSON.stringify(appointments));
+
       document.getElementById("selectedProvider").innerText = provider;
       document.getElementById("selectedService").innerText = service;
       document.getElementById("selectedDate").innerText = date;
       document.getElementById("selectedTime").innerText = selectedTimeValue;
 
-      message.textContent = "Appointment confirmed successfully!";
+      message.textContent = "Appointment confirmed successfully and saved to Upcoming Appointments.";
       message.className = "message success";
     }
 
@@ -156,12 +185,22 @@
 
       selectedTimeValue = "";
       selectedProviderValue = "";
+      selectedRowId = "";
+
+      removeRowHighlights();
 
       const message = document.getElementById("bookingMessage");
       message.textContent = "Appointment selection cleared.";
       message.className = "message";
     }
-  </script>
 
+    function goToAppointments() {
+      window.location.href = "appointments.html";
+    }
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
 </html>
